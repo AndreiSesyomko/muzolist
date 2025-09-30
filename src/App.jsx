@@ -8,7 +8,7 @@ import NavBar from "./components/NavBar";
 import AppRouter from "./components/AppRouter";
 import Footer from "./components/Footer";
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import '../src/styles/custom.scss'
+
 
 const App = observer(() => {
   const [loading, setLoading] = React.useState(false);

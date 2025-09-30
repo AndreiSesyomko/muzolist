@@ -4,6 +4,77 @@
   padding: 0;
 }
 
+*::selection {
+  background: #CC25F7;
+  color: #fff;
+}
+
+h5 {
+  margin: 0;
+}
+
 body {
   background: url("../assets/back.jpg");
+}
+
+.footer {
+  background: white;
+  color: #CC25F7;
+  height: 56px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
+}
+
+.playPause {
+  transform: scale(0.6);
+}
+
+.playPause > path {
+  fill: #d3d3d3;
+  transition: 0.2s;
+}
+
+.playPause:hover > path {
+  fill: #8c8c8c;
+}
+
+.playPause > rect {
+  fill: #d3d3d3;
+  transition: 0.2s;
+}
+
+.playPause:hover > rect {
+  fill: #8c8c8c;
+}
+
+.prev {
+  transform: rotate(180deg) scale(0.6);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.rotate {
+  animation: spin 5s linear infinite;
+}
+
+.cover {
+  width: 80px;
+  height: 80px;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.default_cover {
+  width: 100px;
+  height: 100px;
 }

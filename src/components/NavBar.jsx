@@ -3,6 +3,7 @@ import { Navbar, Container, Button, Offcanvas, Nav } from 'react-bootstrap';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
+import AudioPlayer from "./AudioPlayer";
 
 function NavBar() {
     const [showSidebar, setShowSidebar] = useState(false);
@@ -11,6 +12,23 @@ function NavBar() {
 
     const toggleSidebar = () => setShowSidebar(!showSidebar);
     const closeSidebar = () => setShowSidebar(false);
+
+    const tracks = [
+        {
+            title: 'Трек',
+            artist: 'Артист',
+            cover: './testcover/image-61785-800.jpg',
+            album: '',
+            src: './testaudio/t1.mp3',
+        },
+        {
+            title: 'Другой трек',
+            artist: 'Другой артист',
+            cover: '',
+            album: '',
+            src: './testaudio/t2.mp3',
+        },
+    ];
 
     return (
         <>
@@ -22,7 +40,7 @@ function NavBar() {
                     </Button> : <Button style={{color: '#CC25F7'}} variant="outline-light" onClick={() => navigate('/auth')} aria-label="Toggle sidebar">
                         Авторизоваться
                     </Button>}
-
+                    <AudioPlayer tracks={tracks} />
                     <Navbar.Brand style={{color: '#CC25F7', cursor: 'pointer'}} onClick={() => navigate('/')} className="mx-3">
                         Muzolist
                     </Navbar.Brand>

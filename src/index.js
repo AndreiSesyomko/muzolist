@@ -1,5 +1,6 @@
 import React, {createContext} from 'react';
 import ReactDOM from 'react-dom/client';
+import '../src/styles/custom.scss'
 import './styles/index.css';
 import App from './App';
 import UserStore from "./store/UserStore";
