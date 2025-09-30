@@ -11,7 +11,7 @@ const AppRouter = observer(() => {
     return (
         <Routes>
             {
-                user.isAuth() && authRoutes.map(route =>
+                user.isAuth && authRoutes.map(route =>
                     <Route exact={route.exact}
                            path={route.path}
                            element={route.element}
