@@ -3,5 +3,16 @@
 $primary: #CC25F7;
 $secondary: #fff;
 
+:root {
+  --bs-primary-text-emphasis: #fff;
+}
+
+.btn-primary.dropdown-toggle {
+  color: #fff !important;
+}
+
+.dropdown-menu {
+  color: #000; // например, чёрный текст в меню
+}
 
 @import "../../node_modules/bootstrap/scss/bootstrap";

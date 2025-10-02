@@ -78,3 +78,14 @@ body {
   width: 100px;
   height: 100px;
 }
+
+.main {
+  margin: 0 auto;
+  margin-top: 89px;
+  margin-bottom: 19px;
+  background: #fff;
+  border-radius: 25px;
+  min-height: 700px;
+  width: 70%;
+  padding: 35px;
+}

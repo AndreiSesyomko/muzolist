@@ -4,6 +4,7 @@ import '../src/styles/custom.scss'
 import './styles/index.css';
 import App from './App';
 import UserStore from "./store/UserStore";
+import AudioStore from "./store/AudioStore";
 
 export const Context = createContext(null);
 
@@ -12,6 +13,7 @@ root.render(
     <Context.Provider value={
         {
             user: new UserStore(),
+            audioPlayer: new AudioStore()
         }
     }>
         <App />

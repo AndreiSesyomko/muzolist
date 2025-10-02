@@ -1,39 +1,51 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {Button, Image, ProgressBar} from 'react-bootstrap';
+import React, {useState, useRef, useEffect, useContext} from 'react';
+import {Button, Image, ProgressBar, Form} from 'react-bootstrap';
 import { ReactComponent as Play } from '../assets/play.svg';
 import { ReactComponent as Pause } from '../assets/pause.svg';
 import { ReactComponent as PrevNext } from '../assets/prev-next.svg';
 import default_cover from '../assets/muzolist_logo.png';
+import {observer} from "mobx-react-lite";
+import {Context} from "../index";
 
 const AudioPlayer = ({ tracks }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [playing, setPlaying] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [progress, setProgress] = useState(0);
-    const [isRotating, setIsRotating] = useState(false);
-
-    const audioRef = useRef(new Audio(tracks[0].src));
+    const {audioPlayer} = useContext(Context);
 
     useEffect(() => {
-        const audio = audioRef.current;
-        audio.pause();
-        audio.src = tracks[currentIndex].src;
 
-        const onLoadedMetadata = () => setDuration(audio.duration);
+        if (!audioPlayer.audioPlayer) {
+            audioPlayer.setAudioPlayer(new Audio(tracks[audioPlayer.currentIndex].src));
+        }
+
+        const audio = audioPlayer.audioPlayer;
+
+        const url = new URL(audio.src);
+
+        if (url.pathname !== tracks[audioPlayer.currentIndex]?.src) {
+            audio.src = tracks[audioPlayer.currentIndex]?.src;
+            audioPlayer.audioPlayer.load();
+        }
+
+        audio.volume = audioPlayer.volume ?? 1;
+
+        const onLoadedMetadata = () => {
+            console.log('started', audioPlayer.currentIndex);
+            audioPlayer.setDuration(audio.duration);
+        };
         const onTimeUpdate = () => {
-            setCurrentTime(audio.currentTime);
-            setProgress((audio.currentTime / audio.duration) * 100);
+            audioPlayer.setCurrentTime(audio.currentTime);
+            audioPlayer.setProgress((audio.currentTime / audio.duration) * 100);
         };
         const onEnded = () => {
-            handleNext();
+            const nextIndex = (audioPlayer.currentIndex + 1) % tracks.length;
+            audioPlayer.setCurrentIndex(nextIndex);
+            console.log('ended', audioPlayer.currentIndex);
         };
 
         audio.addEventListener('loadedmetadata', onLoadedMetadata);
         audio.addEventListener('timeupdate', onTimeUpdate);
         audio.addEventListener('ended', onEnded);
 
-        if (playing) {
+        if (audioPlayer.playing) {
             audio.play();
         } else {
             audio.pause();
@@ -44,33 +56,41 @@ const AudioPlayer = ({ tracks }) => {
             audio.removeEventListener('timeupdate', onTimeUpdate);
             audio.removeEventListener('ended', onEnded);
         };
-    }, [currentIndex, tracks]);
+
+    }, [audioPlayer.currentIndex, tracks, audioPlayer]);
 
     const togglePlayPause = () => {
-        const audio = audioRef.current;
-        if (playing) {
+        const audio = audioPlayer.audioPlayer;
+        if (audioPlayer.playing) {
             audio.pause();
         } else {
+            console.log(audioPlayer.audioPlayer, 'aaa')
             audio.play();
         }
-        setPlaying(!playing);
-        setIsRotating(!isRotating);
+        audioPlayer.setPlaying(!audioPlayer.playing);
+        audioPlayer.setIsRotating(!audioPlayer.isRotating);
     };
 
     const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % tracks.length);
+        audioPlayer.setCurrentIndex((audioPlayer.currentIndex + 1) % tracks.length);
     };
 
     const handlePrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === 0 ? tracks.length - 1 : prevIndex - 1));
+        audioPlayer.setCurrentIndex((audioPlayer.currentIndex === 0 ? tracks.length - 1 : audioPlayer.currentIndex - 1));
+    };
+
+    const handleVolumeChange = (e) => {
+        const newVolume = parseFloat(e.target.value);
+        audioPlayer.setVolume(newVolume);
+        if (audioPlayer.audioPlayer) audioPlayer.audioPlayer.volume = newVolume;
     };
 
     const handleProgressClick = (e) => {
         const rect = e.target.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
-        const newTime = (clickX / rect.width) * duration;
-        audioRef.current.currentTime = newTime;
-        setCurrentTime(newTime);
+        const newTime = (clickX / rect.width) * audioPlayer.duration;
+        audioPlayer.audioPlayer.currentTime = newTime;
+        audioPlayer.setCurrentTime(newTime);
     };
 
     const formatTime = (time) => {
@@ -81,37 +101,46 @@ const AudioPlayer = ({ tracks }) => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-between" style={{ width: 750 }}>
-            <Image className={`cover ${isRotating ? 'rotate' : ''}`} src={tracks[currentIndex].cover ? tracks[currentIndex].cover : default_cover} alt="cover" />
+        <div className="d-flex align-items-center justify-content-between" style={{ width: 850 }}>
+            <Image className={`cover ${audioPlayer.isRotating ? 'rotate' : ''}`} src={tracks[audioPlayer.currentIndex]?.cover ? tracks[audioPlayer.currentIndex].cover : default_cover} alt="cover" />
 
             <div className="mb-2">
-                <h5>{tracks[currentIndex].title}</h5>
+                <h5>{tracks[audioPlayer.currentIndex]?.title}</h5>
                 <div className="d-flex align-items-center justify-content-around">
-                    <small>{tracks[currentIndex].artist ? tracks[currentIndex].artist : 'Неизвестен'}</small> |
-                    <small>{tracks[currentIndex].album ? tracks[currentIndex].album : 'Неизвестен'}</small>
+                    <small>{tracks[audioPlayer.currentIndex]?.artist ? tracks[audioPlayer.currentIndex].artist : 'Неизвестен'}</small> |
+                    <small>{tracks[audioPlayer.currentIndex]?.album ? tracks[audioPlayer.currentIndex].album : 'Неизвестен'}</small>
                 </div>
             </div>
 
             <div className="d-flex flex-column align-items-center justify-content-center mt-4" style={{ width: 300 }}>
                 <div onClick={handleProgressClick} style={{width: '100%', cursor: 'pointer'}}>
-                    <ProgressBar now={progress}/>
+                    <ProgressBar now={audioPlayer.progress}/>
                 </div>
                 <div className="d-flex justify-content-between w-100 mt-1 mb-3">
-                    <small>{formatTime(currentTime)}</small>
-                    <small>{formatTime(duration)}</small>
+                    <small>{formatTime(audioPlayer.currentTime)}</small>
+                    <small>{formatTime(audioPlayer.duration)}</small>
                 </div>
             </div>
-
 
             <div className="d-flex">
                 <Button variant="secondary" onClick={handlePrev} style={{padding: 0}}><PrevNext className='playPause prev'/></Button>
                 <Button style={{padding: 0}} variant="secondary" onClick={togglePlayPause}>
-                    {playing ? <Pause className="playPause"/> : <Play className="playPause"/>}
+                    {audioPlayer.playing ? <Pause className="playPause"/> : <Play className="playPause"/>}
                 </Button>
                 <Button style={{padding: 0}} variant="secondary" onClick={handleNext}><PrevNext className='playPause'/></Button>
             </div>
+
+            <Form.Range
+                style={{ width: 100 }}
+                min={0}
+                max={1}
+                step={0.01}
+                value={audioPlayer.volume ?? 1}
+                onChange={handleVolumeChange}
+                aria-label="Громкость"
+            />
         </div>
     );
 };
 
-export default AudioPlayer;
+export default observer(AudioPlayer);

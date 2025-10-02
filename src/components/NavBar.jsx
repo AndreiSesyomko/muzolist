@@ -19,14 +19,14 @@ function NavBar() {
             artist: 'Артист',
             cover: './testcover/image-61785-800.jpg',
             album: '',
-            src: './testaudio/t1.mp3',
+            src: '/testaudio/t1.mp3',
         },
         {
             title: 'Другой трек',
             artist: 'Другой артист',
             cover: '',
             album: '',
-            src: './testaudio/t2.mp3',
+            src: '/testaudio/t2.mp3',
         },
     ];
 
