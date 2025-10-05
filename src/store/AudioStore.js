@@ -8,7 +8,7 @@ export default class AudioStore {
     progress = 0;
     isRotating = false;
     audioPlayer = null;
-    volume = 0;
+    volume = 0.75;
 
     constructor() {
         makeAutoObservable(this);

@@ -7,8 +7,9 @@ import default_cover from '../assets/muzolist_logo.png';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 
-const AudioPlayer = ({ tracks }) => {
-    const {audioPlayer} = useContext(Context);
+const AudioPlayer = () => {
+    const {audioPlayer, trackList} = useContext(Context);
+    const tracks = trackList.tracks;
 
     useEffect(() => {
 
@@ -57,7 +58,7 @@ const AudioPlayer = ({ tracks }) => {
             audio.removeEventListener('ended', onEnded);
         };
 
-    }, [audioPlayer.currentIndex, tracks, audioPlayer]);
+    }, [audioPlayer.currentIndex, trackList.tracks, audioPlayer]);
 
     const togglePlayPause = () => {
         const audio = audioPlayer.audioPlayer;
@@ -101,13 +102,14 @@ const AudioPlayer = ({ tracks }) => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-between" style={{ width: 850 }}>
+        <div className="d-flex align-items-center justify-content-between" style={{ width: 900 }}>
             <Image className={`cover ${audioPlayer.isRotating ? 'rotate' : ''}`} src={tracks[audioPlayer.currentIndex]?.cover ? tracks[audioPlayer.currentIndex].cover : default_cover} alt="cover" />
 
             <div className="mb-2">
                 <h5>{tracks[audioPlayer.currentIndex]?.title}</h5>
-                <div className="d-flex align-items-center justify-content-around">
-                    <small>{tracks[audioPlayer.currentIndex]?.artist ? tracks[audioPlayer.currentIndex].artist : 'Неизвестен'}</small> |
+                <div className="d-flex align-items-center justify-content-start">
+                    <small>{tracks[audioPlayer.currentIndex]?.artist ? tracks[audioPlayer.currentIndex].artist : 'Неизвестен'}</small>
+                    &nbsp;|&nbsp;
                     <small>{tracks[audioPlayer.currentIndex]?.album ? tracks[audioPlayer.currentIndex].album : 'Неизвестен'}</small>
                 </div>
             </div>

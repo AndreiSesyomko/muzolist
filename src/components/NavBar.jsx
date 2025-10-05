@@ -7,28 +7,13 @@ import AudioPlayer from "./AudioPlayer";
 
 function NavBar() {
     const [showSidebar, setShowSidebar] = useState(false);
-    const {user} = useContext(Context);
+    const {user, trackList} = useContext(Context);
     const navigate = useNavigate();
 
     const toggleSidebar = () => setShowSidebar(!showSidebar);
     const closeSidebar = () => setShowSidebar(false);
 
-    const tracks = [
-        {
-            title: 'Трек',
-            artist: 'Артист',
-            cover: './testcover/image-61785-800.jpg',
-            album: '',
-            src: '/testaudio/t1.mp3',
-        },
-        {
-            title: 'Другой трек',
-            artist: 'Другой артист',
-            cover: '',
-            album: '',
-            src: '/testaudio/t2.mp3',
-        },
-    ];
+    const tracks = trackList.tracks;
 
     return (
         <>
@@ -56,6 +41,8 @@ function NavBar() {
                         <Nav.Link href="#link1" onClick={closeSidebar}>Профиль</Nav.Link>
                         <Nav.Link href="#link2" onClick={closeSidebar}>Мои треки</Nav.Link>
                         <Nav.Link href="#link3" onClick={closeSidebar}>Посты</Nav.Link>
+                        <Nav.Link href="#link4" onClick={closeSidebar}>Рекомендации</Nav.Link>
+                        <Nav.Link href="#link5" onClick={closeSidebar}>Добавить свой трек</Nav.Link>
                     </Nav>
                 </Offcanvas.Body>
             </Offcanvas>
