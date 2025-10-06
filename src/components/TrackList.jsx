@@ -29,8 +29,8 @@ const TrackList = () => {
     };
 
     return (
-        <ListGroup style={{ maxHeight: "580px", overflowY: "auto" }}>
-            {trackList.tracks.map((track, index) => <ListGroup.Item onClick={() => togglePlayPause(index)} action key={track.id}>
+        <ListGroup className="custom-scrollbar" style={{ maxHeight: "580px", overflowY: "auto" }}>
+            {trackList.tracks.map((track, index) => <ListGroup.Item active={audioPlayer.currentIndex === index} onClick={() => togglePlayPause(index)} action key={index}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center justify-content-left">
                         <Image

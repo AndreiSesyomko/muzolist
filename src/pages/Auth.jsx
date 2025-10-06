@@ -1,12 +1,18 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
+import {loginAPI, registrationAPI} from "../api/user";
+import {observer} from "mobx-react-lite";
+import {Context} from "../index";
+import {useNavigate} from "react-router-dom";
 
 const Auth = () => {
+    const {user} = useContext(Context);
     const [isRegister, setIsRegister] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const switchMode = () => {
         setIsRegister(!isRegister);
@@ -35,6 +41,28 @@ const Auth = () => {
             return;
         }
         setError(null);
+        if(isRegister) {
+            registrationAPI(email, username, password).then(data => {
+                user.setUser(data)
+                user.setIsAuth(true)
+                navigate('/')
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    setError('Неверный email или пароль');
+                }
+            });
+        } else {
+            loginAPI(email, password).then(data => {
+                user.setUser(data)
+                user.setIsAuth(true)
+                console.log(data)
+                navigate('/')
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    setError('Неверный email или пароль');
+                }
+            });
+        }
     };
     return (
         <Container
@@ -115,4 +143,4 @@ const Auth = () => {
     );
 };
 
-export default Auth;
+export default observer(Auth);

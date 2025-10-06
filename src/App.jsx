@@ -1,17 +1,35 @@
 
 import './styles/index.css';
 import {observer} from "mobx-react-lite";
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import {Spinner} from "react-bootstrap";
 import {BrowserRouter} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import AppRouter from "./components/AppRouter";
 import Footer from "./components/Footer";
+import {checkAuth} from "./api/user";
+import {Context} from "./index";
+import {getTracks} from "./api/track";
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 
 const App = observer(() => {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const {user, trackList} = useContext(Context)
+
+  useEffect(() => {
+      checkAuth().then((data) => {
+          console.log(data);
+          user.setIsAuth(true);
+          user.setUser(data);
+      }).finally(() => {
+          setLoading(false);
+      })
+      getTracks().then((data) => {
+          console.log(data);
+          trackList.setTracks([...trackList.tracks, ...data]);
+      })
+  }, [])
 
   if(loading)
   {

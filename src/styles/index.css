@@ -89,3 +89,23 @@ body {
   width: 70%;
   padding: 35px;
 }
+
+.custom-scrollbar {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #CC25F7 white;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: white;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #CC25F7;
+  border-radius: 10px;
+  border: 2px solid white;
+}

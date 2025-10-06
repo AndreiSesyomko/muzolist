@@ -4,9 +4,11 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
 import AudioPlayer from "./AudioPlayer";
+import CreateTrackModal from "./modals/CreateTrackModal";
 
 function NavBar() {
     const [showSidebar, setShowSidebar] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const {user, trackList} = useContext(Context);
     const navigate = useNavigate();
 
@@ -42,9 +44,10 @@ function NavBar() {
                         <Nav.Link href="#link2" onClick={closeSidebar}>Мои треки</Nav.Link>
                         <Nav.Link href="#link3" onClick={closeSidebar}>Посты</Nav.Link>
                         <Nav.Link href="#link4" onClick={closeSidebar}>Рекомендации</Nav.Link>
-                        <Nav.Link href="#link5" onClick={closeSidebar}>Добавить свой трек</Nav.Link>
+                        <Nav.Link href="#createTrack" onClick={() => setShowCreateModal(true)}>Добавить свой трек</Nav.Link>
                     </Nav>
                 </Offcanvas.Body>
+                <CreateTrackModal show={showCreateModal} onHide={() => setShowCreateModal(false)} />
             </Offcanvas>
 
             <div style={{ paddingTop: '56px' }}></div>
