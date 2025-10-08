@@ -21,7 +21,7 @@ const CreateTrackModal = ({show, onHide}) => {
     const addTrack = () => {
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('genre', selectedGenre.id);
+        formData.append('genre_id', selectedGenre.id);
         formData.append('cover', cover);
         formData.append('audio', audio);
         createTrack(formData, author, album).then((data) => {
