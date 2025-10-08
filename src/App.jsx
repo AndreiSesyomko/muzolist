@@ -19,15 +19,19 @@ const App = observer(() => {
 
   useEffect(() => {
       checkAuth().then((data) => {
-          console.log(data);
-          user.setIsAuth(true);
-          user.setUser(data);
+          if(data) {
+              console.log(data);
+              user.setIsAuth(true);
+              user.setUser(data);
+          }
       }).finally(() => {
           setLoading(false);
       })
       getTracks().then((data) => {
           console.log(data);
-          trackList.setTracks([...trackList.tracks, ...data]);
+          if(data) {
+              trackList.setTracks([...trackList.tracks, ...data]);
+          }
       })
   }, [])
 
