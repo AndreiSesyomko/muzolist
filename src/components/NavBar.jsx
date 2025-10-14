@@ -5,10 +5,12 @@ import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
 import AudioPlayer from "./AudioPlayer";
 import CreateTrackModal from "./modals/CreateTrackModal";
+import UserInfoModal from "./modals/UserInfoModal";
 
 function NavBar() {
     const [showSidebar, setShowSidebar] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showUserModal, setShowUserModal] = useState(false);
     const {user, trackList} = useContext(Context);
     const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ function NavBar() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
-                        <Nav.Link href="#link1" onClick={closeSidebar}>Профиль</Nav.Link>
+                        <Nav.Link href="#link1" onClick={() => setShowUserModal(true)}>Профиль</Nav.Link>
                         <Nav.Link href="#link2" onClick={closeSidebar}>Мои треки</Nav.Link>
                         <Nav.Link href="#link3" onClick={closeSidebar}>Посты</Nav.Link>
                         <Nav.Link href="#link4" onClick={closeSidebar}>Рекомендации</Nav.Link>
@@ -48,6 +50,7 @@ function NavBar() {
                     </Nav>
                 </Offcanvas.Body>
                 <CreateTrackModal show={showCreateModal} onHide={() => setShowCreateModal(false)} />
+                <UserInfoModal show={showUserModal} onHide={() => setShowUserModal(false)} user={user.user}/>
             </Offcanvas>
 
             <div style={{ paddingTop: '56px' }}></div>

@@ -6,6 +6,9 @@ import App from './App';
 import UserStore from "./store/UserStore";
 import AudioStore from "./store/AudioStore";
 import TrackListStore from "./store/TrackListStore";
+import { Buffer } from "buffer";
+
+window.Buffer = window.Buffer || Buffer;
 
 export const Context = createContext(null);
 
