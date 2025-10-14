@@ -11,6 +11,7 @@ const Auth = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [errors, setErrors] = useState({});
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
@@ -19,49 +20,51 @@ const Auth = () => {
         setEmail('');
         setPassword('');
         setUsername('');
-        setError(null);
+        setErrors({});
     };
 
-    const validateEmail = (email) => {
+    const validateEmail = () => {
         return /^\S+@\S+\.\S+$/.test(email);
     };
 
+    const validate = () => {
+        const newErrors = {};
+        if (isRegister && !(username.trim().length > 2 && username.trim().length < 26)) newErrors.name = "Username должно быть не менее 3 символов и не более 25";
+        if (!(password.trim().length > 5 && password.trim().length < 31)) newErrors.password = "Пароль должно быть не менее 6 символов и не более 30";
+        if (!validateEmail()) newErrors.email = "Некорректный email";
+
+        setErrors(newErrors);
+        console.log(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!email || !validateEmail(email)) {
-            setError('Пожалуйста, введите корректный Email.');
-            return;
-        }
-        if (!password) {
-            setError('Пожалуйста, введите пароль.');
-            return;
-        }
-        if (isRegister && !username) {
-            setError('Пожалуйста, введите имя пользователя.');
-            return;
-        }
-        setError(null);
-        if(isRegister) {
-            registrationAPI(email, username, password).then(data => {
-                user.setUser(data)
-                user.setIsAuth(true)
-                navigate('/')
-            }).catch(error => {
-                if (error.response && error.response.status === 401) {
-                    setError('Неверный email или пароль');
-                }
-            });
-        } else {
-            loginAPI(email, password).then(data => {
-                user.setUser(data)
-                user.setIsAuth(true)
-                console.log(data)
-                navigate('/')
-            }).catch(error => {
-                if (error.response && error.response.status === 401) {
-                    setError('Неверный email или пароль');
-                }
-            });
+        console.log('a')
+        if(validate()) {
+            console.log('b')
+            setError(null);
+            if(isRegister) {
+                registrationAPI(email, username, password).then(data => {
+                    user.setUser(data)
+                    user.setIsAuth(true)
+                    navigate('/')
+                }).catch(error => {
+                    if (error.response && error.response.status === 401) {
+                        setError('Неверный email или пароль');
+                    }
+                });
+            } else {
+                loginAPI(email, password).then(data => {
+                    user.setUser(data)
+                    user.setIsAuth(true)
+                    console.log(data)
+                    navigate('/')
+                }).catch(error => {
+                    if (error.response && error.response.status === 401) {
+                        setError('Неверный email или пароль');
+                    }
+                });
+            }
         }
     };
     return (
@@ -86,18 +89,21 @@ const Auth = () => {
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label style={{ color: '#a676cd' }}>Email</Form.Label>
-                        <Form.Control value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="Введите email" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                        <Form.Control isInvalid={errors.email} value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="Введите email" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                        <Form.Control.Feedback type="invalid">{errors?.email}</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label style={{ color: '#a676cd' }}>Пароль</Form.Label>
-                        <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Введите пароль" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                        <Form.Control isInvalid={errors.password} value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Введите пароль" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                        <Form.Control.Feedback type="invalid">{errors?.password}</Form.Control.Feedback>
                     </Form.Group>
 
                     {isRegister && (
                         <Form.Group className="mb-3">
                             <Form.Label style={{ color: '#a676cd' }}>Username</Form.Label>
-                            <Form.Control value={username} onChange={e => setUsername(e.target.value)} type="text" placeholder="Введите username" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                            <Form.Control isInvalid={errors.name} value={username} onChange={e => setUsername(e.target.value)} type="text" placeholder="Введите username" style={{ borderColor: '#a676cd', borderRadius: '20px' }} />
+                            <Form.Control.Feedback type="invalid">{errors?.name}</Form.Control.Feedback>
                         </Form.Group>
                     )}
 

@@ -19,12 +19,14 @@ export const createTrack = async (form, author, album) => {
             console.log('asas')
         }
         if(author) {
-            const newAuthor = await $authHost.post('api/authors/', {name: author});
-            form.append('author_id', newAuthor.data.id);
+            const newAuthor = await $authHost.post('api/authors/', {name: author}) ?? {};
+            console.log(newAuthor.data.id);
+            form.append('author_id', newAuthor?.data?.id);
             console.log('bsbs')
         }
-        const {data} = await $authHost.post('api/tracks/', form);
-        return data;
+        const response = await $authHost.post('api/tracks/', form);
+        console.log(response);
+        return response.data;
     } catch (error) {
         console.log(error);
     }
