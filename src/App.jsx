@@ -25,13 +25,17 @@ const App = observer(() => {
               user.setUser(data);
           }
       }).finally(() => {
-          setLoading(false);
-      })
-      getTracks().then((data) => {
-          console.log(data);
-          if(data) {
-              trackList.setTracks([...trackList.tracks, ...data]);
-          }
+          getTracks().then((data) => {
+              if(data) {
+                  console.log(data);
+                  const prev = trackList.tracks;
+                  const res = [...prev, ...data]
+                  trackList.setTracks(res);
+                  console.log(trackList.tracks);
+              }
+          }).finally(() => {
+              setLoading(false);
+          })
       })
   }, [])
 
