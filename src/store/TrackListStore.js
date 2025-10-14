@@ -48,7 +48,7 @@ export default class TrackListStore {
             artist: 'Feder feat. Alex Aiono',
             cover: '',
             album: '',
-            src: '/testaudio/Feder feat. Alex Aiono - Lordly (feat. Alex Aiono).mp3',
+            src: '/testaudio/Tejon Street Corner Thieves - Whiskey.mp3',
         },
         {
             id: 7,

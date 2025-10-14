@@ -13,6 +13,7 @@ const CreateTrackModal = ({show, onHide}) => {
     const [audio, setAudio] = useState(null);
     const [errors, setErrors] = useState({});
     const [checked, setChecked] = useState(false);
+    const [metadata, setMetadata] = useState({});
 
     useEffect(() => {
         getGenres().then((data) => {
@@ -30,18 +31,19 @@ const CreateTrackModal = ({show, onHide}) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const coverHandler = () => {
-        return parseBlob(audio).then(metadata => {
+    const metaDataHandler = (file) => {
+        parseBlob(file).then(metadata => {
             const picture = metadata.common.picture && metadata.common.picture[0];
             if (picture) {
                 const base64 = URL.createObjectURL(new Blob([picture.data], { type: picture.format }));
-                console.log(picture);
-                setCover(new Blob([picture.data], { type: picture.format }));
-                return picture;
+                let metaCover = new Blob([picture.data], { type: picture.format })
+                setMetadata(['cover', metaCover, 'cover_image.' + picture?.format?.split('/')[1]])
             } else {
                 console.log("Обложка не найдена");
-                return null;
+                setErrors({...errors, cover: 'Недопустимая обложка'})
             }
+        }).finally(() => {
+            setAudio(file)
         });
     }
 
@@ -50,10 +52,8 @@ const CreateTrackModal = ({show, onHide}) => {
             const formData = new FormData();
             formData.append('name', name);
             formData.append('genre_id', selectedGenre.id);
-            const picture = await coverHandler()
-            console.log(picture)
-            if(!checked && picture) {
-                formData.append('cover', cover, 'cover_image.' + picture?.format?.split('/')[1]);
+            if(!checked && metadata) {
+                formData.append(metadata[0], metadata[1], metadata[2]);
             } else {
                 if(cover) {
                     formData.append('cover', cover);
@@ -102,13 +102,16 @@ const CreateTrackModal = ({show, onHide}) => {
                                     id="confirm-checkbox"
                                     label="Использовать свою обложку"
                                     onChange={e => setChecked(e.target.checked)}/>
-                        <Form.Control disabled={!checked} isInvalid={errors.audio} accept=".png, .gif, .jpeg, .jpg, .svg, .webp" onChange={(e) => setCover(e.target.files[0])}
+                        <Form.Control disabled={!checked} isInvalid={errors.cover} accept=".png, .gif, .jpeg, .jpg, .svg, .webp" onChange={(e) => setCover(e.target.files[0])}
                                       type={"file"}/>
+                        <Form.Control.Feedback type="invalid">{errors?.cover}</Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label className={"mt-2"}>Выберите аудио</Form.Label>
+                        <Form.Control accept=".mp3, .wav, .aiff, .aac, .mp4, .wma, .ogg, .opus" onChange={(e) => metaDataHandler(e.target.files[0])}
+                                      type={"file"} isInvalid={errors.audio}/>
                         <Form.Control.Feedback type="invalid">{errors?.audio}</Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Label className={"mt-2"}>Выберите аудио</Form.Label>
-                    <Form.Control accept=".mp3, .wav, .aiff, .aac, .mp4, .wma, .ogg, .opus" onChange={(e) => setAudio(e.target.files[0])}
-                                  type={"file"}/>
                 </Form>
 
             </Modal.Body>

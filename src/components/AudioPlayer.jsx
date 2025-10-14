@@ -10,6 +10,13 @@ import {Context} from "../index";
 const AudioPlayer = () => {
     const {audioPlayer, trackList} = useContext(Context);
     const tracks = trackList.tracks;
+    const [now, setNow] = useState(0);
+
+    useEffect(() => {
+        if(audioPlayer.audioPlayer){
+            audioPlayer.audioPlayer.currentTime = now;
+        }
+    }, [now]);
 
     useEffect(() => {
 
@@ -17,24 +24,24 @@ const AudioPlayer = () => {
             audioPlayer.setAudioPlayer(new Audio(tracks[audioPlayer.currentIndex].src));
         }
 
-        const audio = audioPlayer.audioPlayer;
+        console.log(audioPlayer, tracks);
 
-        const url = new URL(audio.src);
+        const url = new URL(audioPlayer.audioPlayer.src);
 
-        if (url.pathname !== tracks[audioPlayer.currentIndex]?.src) {
-            audio.src = tracks[audioPlayer.currentIndex]?.src;
+        if (url.pathname != tracks[audioPlayer.currentIndex]?.src) {
+            audioPlayer.audioPlayer.src = tracks[audioPlayer.currentIndex]?.src;
             audioPlayer.audioPlayer.load();
         }
 
-        audio.volume = audioPlayer.volume ?? 1;
+        audioPlayer.audioPlayer.volume = audioPlayer.volume ?? 1;
 
         const onLoadedMetadata = () => {
             console.log('started', audioPlayer.currentIndex);
-            audioPlayer.setDuration(audio.duration);
+            audioPlayer.setDuration(audioPlayer.audioPlayer.duration);
         };
         const onTimeUpdate = () => {
-            audioPlayer.setCurrentTime(audio.currentTime);
-            audioPlayer.setProgress((audio.currentTime / audio.duration) * 100);
+            audioPlayer.setCurrentTime(audioPlayer.audioPlayer.currentTime);
+            audioPlayer.setProgress((audioPlayer.audioPlayer.currentTime / audioPlayer.audioPlayer.duration) * 100);
         };
         const onEnded = () => {
             const nextIndex = (audioPlayer.currentIndex + 1) % tracks.length;
@@ -42,31 +49,30 @@ const AudioPlayer = () => {
             console.log('ended', audioPlayer.currentIndex);
         };
 
-        audio.addEventListener('loadedmetadata', onLoadedMetadata);
-        audio.addEventListener('timeupdate', onTimeUpdate);
-        audio.addEventListener('ended', onEnded);
+        audioPlayer.audioPlayer.addEventListener('loadedmetadata', onLoadedMetadata);
+        audioPlayer.audioPlayer.addEventListener('timeupdate', onTimeUpdate);
+        audioPlayer.audioPlayer.addEventListener('ended', onEnded);
 
         if (audioPlayer.playing) {
-            audio.play();
+            audioPlayer.audioPlayer.play();
         } else {
-            audio.pause();
+            audioPlayer.audioPlayer.pause();
         }
 
         return () => {
-            audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-            audio.removeEventListener('timeupdate', onTimeUpdate);
-            audio.removeEventListener('ended', onEnded);
+            audioPlayer.audioPlayer.removeEventListener('loadedmetadata', onLoadedMetadata);
+            audioPlayer.audioPlayer.removeEventListener('timeupdate', onTimeUpdate);
+            audioPlayer.audioPlayer.removeEventListener('ended', onEnded);
         };
 
     }, [audioPlayer.currentIndex, trackList.tracks, audioPlayer]);
 
     const togglePlayPause = () => {
-        const audio = audioPlayer.audioPlayer;
         if (audioPlayer.playing) {
-            audio.pause();
+            audioPlayer.audioPlayer.pause();
         } else {
             console.log(audioPlayer.audioPlayer, 'aaa')
-            audio.play();
+            audioPlayer.audioPlayer.play();
         }
         audioPlayer.setPlaying(!audioPlayer.playing);
         audioPlayer.setIsRotating(!audioPlayer.isRotating);
@@ -89,9 +95,13 @@ const AudioPlayer = () => {
     const handleProgressClick = (e) => {
         const rect = e.target.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
-        const newTime = (clickX / rect.width) * audioPlayer.duration;
+        const newTime = (clickX / 300) * audioPlayer.duration;
+        console.log("curTimePrev", audioPlayer.audioPlayer.currentTime)
         audioPlayer.audioPlayer.currentTime = newTime;
+        console.log("curTimePost", audioPlayer.audioPlayer.currentTime)
         audioPlayer.setCurrentTime(newTime);
+        console.log("handleProgressClick", audioPlayer.audioPlayer.currentTime)
+        setNow(newTime);
     };
 
     const formatTime = (time) => {

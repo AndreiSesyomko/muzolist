@@ -23,6 +23,7 @@ export default class AudioStore {
     }
 
     setCurrentTime(time) {
+        console.log('currenttime changed ', time)
         this.currentTime = time;
     }
 
