@@ -32,9 +32,13 @@ export const createTrack = async (form, author, album) => {
     }
 };
 
-export const getTracks = async () => {
+export const getTracks = async (search=null) => {
     try {
-        const {data} = await $host.get('api/tracks/');
+        let query = 'api/tracks/';
+        if(search) {
+            query += `?search=${search}`;
+        }
+        const {data} = await $host.get(query);
         const res = data.map((track) => {
             console.log(track);
             return {...track, artist: track?.author?.name, album: track?.album?.name, src: track.audio, title: track.name};

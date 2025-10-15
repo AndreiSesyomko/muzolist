@@ -28,10 +28,10 @@ const App = observer(() => {
           getTracks().then((data) => {
               if(data) {
                   console.log(data);
-                  const prev = trackList.tracks;
-                  const res = [...prev, ...data]
+                  const res = [...data]
                   trackList.setTracks(res);
-                  console.log(trackList.tracks);
+                  trackList.setCurrentTracks(res)
+                  console.log(trackList.tracks, trackList.currentTracks);
               }
           }).finally(() => {
               setLoading(false);

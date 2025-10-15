@@ -1,9 +1,35 @@
-import React from 'react';
-import {Dropdown, InputGroup, Form, DropdownButton} from "react-bootstrap";
+import React, {useContext, useEffect} from 'react';
+import {Dropdown, InputGroup, Form, DropdownButton, Spinner} from "react-bootstrap";
 import TrackList from "../components/TrackList";
+import {getTracks} from "../api/track";
+import {observer} from "mobx-react-lite";
+import {Context} from "../index";
 
 const Main = () => {
+    const {trackList} = useContext(Context)
     const [search, setSearch] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
+    useEffect(() => {
+        if (search) {
+            setLoading(true);
+            getTracks(search).then(tracks => {
+                console.log(tracks);
+                trackList.setTracks(tracks);
+                trackList.setIsEquals(false);
+            }).finally(() => {
+                setLoading(false);
+            })
+        } else {
+            setLoading(true);
+            getTracks().then(tracks => {
+                console.log(tracks);
+                trackList.setTracks(tracks);
+                trackList.setIsEquals(false);
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+    }, [search])
     return (
         <div className="main">
             <InputGroup className="mb-3">
@@ -19,9 +45,11 @@ const Main = () => {
                     <Dropdown.Item href="#">По популярности</Dropdown.Item>
                 </DropdownButton>
             </InputGroup>
-            <TrackList/>
+            {loading ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px'}}>
+                <Spinner animation="border" variant="primary"/>
+            </div> : <TrackList/>}
         </div>
     );
 };
 
-export default Main;
+export default observer(Main);

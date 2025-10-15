@@ -109,3 +109,22 @@ body {
   border-radius: 10px;
   border: 2px solid white;
 }
+
+.like {
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  color: #d3d3d3;
+  transition: .2s;
+}
+
+.like:hover {
+  color: #ed2dd3;
+}
+
+.liked {
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  color: #ed2dd3;
+}
