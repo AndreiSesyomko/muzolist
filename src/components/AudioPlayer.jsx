@@ -3,13 +3,15 @@ import {Button, Image, ProgressBar, Form} from 'react-bootstrap';
 import { ReactComponent as Play } from '../assets/play.svg';
 import { ReactComponent as Pause } from '../assets/pause.svg';
 import { ReactComponent as PrevNext } from '../assets/prev-next.svg';
+import { ReactComponent as Like } from '../assets/like.svg';
 import default_cover from '../assets/muzolist_logo.png';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
+import {HeartFill} from "react-bootstrap-icons"
 
 const AudioPlayer = () => {
     const {audioPlayer, trackList} = useContext(Context);
-    const tracks = trackList.tracks;
+    const tracks = trackList.currentTracks;
     const [now, setNow] = useState(0);
 
     useEffect(() => {
@@ -65,7 +67,7 @@ const AudioPlayer = () => {
             audioPlayer.audioPlayer.removeEventListener('ended', onEnded);
         };
 
-    }, [audioPlayer.currentIndex, trackList.tracks, audioPlayer]);
+    }, [audioPlayer.currentIndex, trackList.currentTracks, audioPlayer]);
 
     const togglePlayPause = () => {
         if (audioPlayer.playing) {
@@ -112,7 +114,7 @@ const AudioPlayer = () => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-between" style={{ width: 900 }}>
+        <div className="d-flex align-items-center justify-content-between" style={{ width: 1100 }}>
             <Image className={`cover ${audioPlayer.isRotating ? 'rotate' : ''}`} src={tracks[audioPlayer.currentIndex]?.cover ? tracks[audioPlayer.currentIndex].cover : default_cover} alt="cover" />
 
             <div className="mb-2">
@@ -151,6 +153,8 @@ const AudioPlayer = () => {
                 onChange={handleVolumeChange}
                 aria-label="Громкость"
             />
+
+            <HeartFill className="like"/>
         </div>
     );
 };

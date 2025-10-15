@@ -10,6 +10,8 @@ const TrackList = () => {
     const {trackList, audioPlayer} = useContext(Context);
 
     const togglePlayPause = (index) => {
+        trackList.setCurrentTracks(trackList.tracks)
+        trackList.setIsEquals(true)
         if(audioPlayer.currentIndex !== index) {
             audioPlayer.setCurrentIndex(index);
             audioPlayer.setPlaying(true);
@@ -29,12 +31,12 @@ const TrackList = () => {
     };
 
     return (
-        <ListGroup className="custom-scrollbar" style={{ maxHeight: "580px", overflowY: "auto" }}>
-            {trackList.tracks.map((track, index) => <ListGroup.Item active={audioPlayer.currentIndex === index} onClick={() => togglePlayPause(index)} action key={index}>
+        trackList.tracks.length > 0 ? <ListGroup className="custom-scrollbar" style={{ maxHeight: "580px", overflowY: "auto" }}>
+            {trackList.tracks.map((track, index) => <ListGroup.Item active={audioPlayer.currentIndex === index && trackList.isEquals} onClick={() => togglePlayPause(index)} action key={index}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center justify-content-left">
                         <Image
-                            className={`cover me-4 ${audioPlayer.isRotating && audioPlayer.currentIndex === index ? 'rotate' : ''}`}
+                            className={`cover me-4 ${audioPlayer.isRotating && audioPlayer.currentIndex === index && trackList.isEquals ? 'rotate' : ''}`}
                             src={track.cover ? track.cover : default_cover} alt="cover"/>
                         <div>
                             <h5>{track.title}</h5>
@@ -45,10 +47,11 @@ const TrackList = () => {
                             </div>
                         </div>
                     </div>
-                    {audioPlayer.playing && audioPlayer.currentIndex === index ? <Pause className="playPause"/> : <Play className="playPause"/>}
+                    {audioPlayer.playing && audioPlayer.currentIndex === index && trackList.isEquals ? <Pause className="playPause"/> : <Play className="playPause"/>}
                 </div>
             </ListGroup.Item>)}
-        </ListGroup>
+        </ListGroup> : <p>Треки не найдены :(</p>
+
     );
 };
 
