@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-const test = [
+export const testTracks = [
     {
         id: 1,
         title: 'Send a Sign',

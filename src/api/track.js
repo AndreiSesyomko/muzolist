@@ -32,11 +32,18 @@ export const createTrack = async (form, author, album) => {
     }
 };
 
-export const getTracks = async (search=null) => {
+export const getTracks = async (search=null, favourites_of=null) => {
     try {
         let query = 'api/tracks/';
         if(search) {
             query += `?search=${search}`;
+        }
+        if(search && favourites_of) {
+            query += `&favourites_of=${favourites_of}`
+        }
+        else if(favourites_of) {
+            console.log(favourites_of);
+            query += `?favourites_of=${favourites_of}`;
         }
         const {data} = await $host.get(query);
         const res = data.map((track) => {
@@ -48,3 +55,8 @@ export const getTracks = async (search=null) => {
         console.log(error);
     }
 };
+
+export const addToFavourites = async (user_id, track_id) => {
+    const res = await $authHost.post('/api/tracks/' + track_id + '/add_favorite/')
+    return res;
+}

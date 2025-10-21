@@ -11,11 +11,16 @@ function NavBar() {
     const [showSidebar, setShowSidebar] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showUserModal, setShowUserModal] = useState(false);
-    const {user, trackList} = useContext(Context);
+    const {user, trackList, audioPlayer} = useContext(Context);
     const navigate = useNavigate();
 
     const toggleSidebar = () => setShowSidebar(!showSidebar);
     const closeSidebar = () => setShowSidebar(false);
+
+    const handleFavourites = () => {
+        navigate('/favorites');
+        closeSidebar();
+    }
 
     const tracks = trackList.tracks;
 
@@ -43,7 +48,7 @@ function NavBar() {
                 <Offcanvas.Body>
                     <Nav className="flex-column">
                         <Nav.Link href="#link1" onClick={() => setShowUserModal(true)}>Профиль</Nav.Link>
-                        <Nav.Link href="#link2" onClick={closeSidebar}>Мои треки</Nav.Link>
+                        <Nav.Link onClick={handleFavourites}>Мои треки</Nav.Link>
                         <Nav.Link href="#link3" onClick={closeSidebar}>Посты</Nav.Link>
                         <Nav.Link href="#link4" onClick={closeSidebar}>Рекомендации</Nav.Link>
                         <Nav.Link href="#createTrack" onClick={() => setShowCreateModal(true)}>Добавить свой трек</Nav.Link>

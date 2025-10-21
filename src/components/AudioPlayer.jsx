@@ -8,9 +8,11 @@ import default_cover from '../assets/muzolist_logo.png';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {HeartFill} from "react-bootstrap-icons"
+import {addToFavourites} from "../api/track";
 
 const AudioPlayer = () => {
-    const {audioPlayer, trackList} = useContext(Context);
+    const {audioPlayer, trackList, user} = useContext(Context);
+    const [isLiked, setIsLiked] = useState(false)
     const tracks = trackList.currentTracks;
     const [now, setNow] = useState(0);
 
@@ -21,7 +23,10 @@ const AudioPlayer = () => {
     }, [now]);
 
     useEffect(() => {
+        setIsLiked(user.favourites.find(track => track?.id == tracks[audioPlayer.currentIndex].id))
+    }, [audioPlayer.currentIndex]);
 
+    useEffect(() => {
         if (!audioPlayer.audioPlayer) {
             audioPlayer.setAudioPlayer(new Audio(tracks[audioPlayer.currentIndex].src));
         }
@@ -113,6 +118,21 @@ const AudioPlayer = () => {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
+    const handleLike = () => {
+        addToFavourites(user.user.id, tracks[audioPlayer.currentIndex].id).then(data => {
+            if(isLiked) {
+                user.setFavourites(user.favourites.filter(track => track?.id != tracks[audioPlayer.currentIndex].id));
+            } else {
+                user.setFavourites([...user.favourites, data.track]);
+            }
+            setIsLiked(!isLiked);
+        });
+    }
+
+    if(!audioPlayer.audioPlayer) {
+        return;
+    }
+
     return (
         <div className="d-flex align-items-center justify-content-between" style={{ width: 1100 }}>
             <Image className={`cover ${audioPlayer.isRotating ? 'rotate' : ''}`} src={tracks[audioPlayer.currentIndex]?.cover ? tracks[audioPlayer.currentIndex].cover : default_cover} alt="cover" />
@@ -154,7 +174,7 @@ const AudioPlayer = () => {
                 aria-label="Громкость"
             />
 
-            <HeartFill className="like"/>
+            {user.isAuth && <HeartFill onClick={handleLike} className={`${isLiked ? 'liked' : 'like'}`}/>}
         </div>
     );
 };

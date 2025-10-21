@@ -6,6 +6,7 @@ export default class UserStore
     {
         this._isAuth = false;
         this._user = {};
+        this._favourites = [];
         makeAutoObservable(this);
     }
 
@@ -19,6 +20,10 @@ export default class UserStore
         this._user = user;
     }
 
+    setFavourites(favourites) {
+        this._favourites = favourites
+    }
+
     get isAuth()
     {
         return this._isAuth;
@@ -27,5 +32,9 @@ export default class UserStore
     get user()
     {
         return this._user;
+    }
+
+    get favourites() {
+        return this._favourites
     }
 }
