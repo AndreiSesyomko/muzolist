@@ -60,3 +60,12 @@ export const addToFavourites = async (user_id, track_id) => {
     const res = await $authHost.post('/api/tracks/' + track_id + '/add_favorite/')
     return res;
 }
+
+export const getRecomendations = async (user_id) => {
+    const {data} = await $authHost.get('/api/tracks/favourite_genre_distribution/?user_id=' + user_id)
+    const res = data.map((track) => {
+            console.log(track);
+            return {...track, artist: track?.author?.name, album: track?.album?.name, src: track.audio, title: track.name};
+        });
+    return res;
+}

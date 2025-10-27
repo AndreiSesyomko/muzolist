@@ -7,6 +7,7 @@ import UserStore from "./store/UserStore";
 import AudioStore from "./store/AudioStore";
 import TrackListStore from "./store/TrackListStore";
 import { Buffer } from "buffer";
+import PostStore from "./store/PostStore";
 
 window.Buffer = window.Buffer || Buffer;
 
@@ -19,6 +20,7 @@ root.render(
             user: new UserStore(),
             audioPlayer: new AudioStore(),
             trackList: new TrackListStore(),
+            posts: new PostStore(),
         }
     }>
         <App />

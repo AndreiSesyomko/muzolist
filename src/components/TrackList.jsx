@@ -6,24 +6,24 @@ import default_cover from "../assets/muzolist_logo.png";
 import { ReactComponent as Play } from '../assets/play.svg';
 import { ReactComponent as Pause } from '../assets/pause.svg';
 
-const TrackList = () => {
+const TrackList = ({height="580px"}) => {
     const {trackList, audioPlayer} = useContext(Context);
 
-    const togglePlayPause = (index) => {
+    const togglePlayPause = async (index) => {
         trackList.setCurrentTracks(trackList.tracks)
         trackList.setIsEquals(true)
         if(audioPlayer.currentIndex !== index) {
             audioPlayer.setCurrentIndex(index);
             audioPlayer.setPlaying(true);
             audioPlayer.setIsRotating(true);
-            audioPlayer.audioPlayer.play();
+            await audioPlayer.audioPlayer.play();
         } else {
             const audio = audioPlayer.audioPlayer;
             if (audioPlayer.playing) {
                 audio.pause();
             } else {
                 console.log(audioPlayer.audioPlayer, 'aaa')
-                audio.play();
+                await audio.play();
             }
             audioPlayer.setPlaying(!audioPlayer.playing);
             audioPlayer.setIsRotating(!audioPlayer.isRotating);
@@ -31,7 +31,7 @@ const TrackList = () => {
     };
 
     return (
-        trackList.tracks?.length > 0 ? <ListGroup className="custom-scrollbar" style={{ maxHeight: "580px", overflowY: "auto" }}>
+        trackList.tracks?.length > 0 ? <ListGroup className="custom-scrollbar" style={{ maxHeight: height, overflowY: "auto" }}>
             {trackList.tracks.map((track, index) => <ListGroup.Item active={audioPlayer.currentIndex === index && trackList.isEquals} onClick={() => togglePlayPause(index)} action key={index}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center justify-content-left">
