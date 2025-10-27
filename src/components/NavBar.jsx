@@ -22,6 +22,16 @@ function NavBar() {
         closeSidebar();
     }
 
+    const handlePosts = () => {
+        navigate('/posts');
+        closeSidebar();
+    }
+
+    const handleReco = () => {
+        navigate('/recomendations');
+        closeSidebar();
+    }
+
     const tracks = trackList.tracks;
 
     return (
@@ -47,10 +57,10 @@ function NavBar() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
-                        <Nav.Link href="#link1" onClick={() => setShowUserModal(true)}>Профиль</Nav.Link>
+                        <Nav.Link onClick={() => setShowUserModal(true)}>Профиль</Nav.Link>
                         <Nav.Link onClick={handleFavourites}>Мои треки</Nav.Link>
-                        <Nav.Link href="#link3" onClick={closeSidebar}>Посты</Nav.Link>
-                        <Nav.Link href="#link4" onClick={closeSidebar}>Рекомендации</Nav.Link>
+                        <Nav.Link onClick={handlePosts}>Посты</Nav.Link>
+                        <Nav.Link onClick={handleReco}>Рекомендации</Nav.Link>
                         <Nav.Link href="#createTrack" onClick={() => setShowCreateModal(true)}>Добавить свой трек</Nav.Link>
                     </Nav>
                 </Offcanvas.Body>
