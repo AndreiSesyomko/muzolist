@@ -3,6 +3,8 @@ import React, {useContext, useEffect} from "react";
 import {getCats, getPosts} from "../api/post";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
+import CreatePostModal from "../components/modals/CreatePostModal";
+import Post from "../components/Post";
 
 const Posts = () => {
 
@@ -10,14 +12,20 @@ const Posts = () => {
     const [search, setSearch] = React.useState('');
     const [selectedCat, setSelectedCat] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
 
     useEffect(() => {
         getCats().then(data => {
-            posts.setCats(data);
-            console.log(data)
+            if(data) {
+                posts.setCats(data);
+            }
         }).finally(() => {
             getPosts().then(data => {
-                posts.setPosts(data);
+                console.log(data);
+                if(data) {
+                    posts.setPosts(data);
+                    console.log(posts.posts);
+                }
             }).then(() => {
                 setLoading(false);
             })
@@ -26,18 +34,19 @@ const Posts = () => {
 
     useEffect(() => {
         getPosts(search, selectedCat).then(data => {
-            posts.setPosts(data);
+            if(data) {
+                posts.setPosts(data);
+            }
         })
     }, [search, selectedCat]);
-
-    const handleCreatePost = () => {
-
-    }
 
     return (
         <div className="main">
             <h4>Посты</h4>
-            <Button className="mt-3" style={{width: '100%'}} onClick={handleCreatePost}>Создать пост</Button>
+            <Button className="mt-3" style={{width: '100%'}} onClick={() => {
+                setShowModal(true);
+                console.log(showModal)
+            }}>Создать пост</Button>
             <InputGroup className="mt-3">
                 <Form.Control value={search} onChange={e => setSearch(e.target.value)} placeholder="Поиск" aria-label="Text input with dropdown button" />
             </InputGroup>
@@ -52,8 +61,11 @@ const Posts = () => {
                         }}>{cat.name}</ListGroup.Item>)}
                     </ListGroup>
                 </div> : null}
-                {posts.posts ? null : <h5 className="mt-3" style={{textAlign: 'center'}}>Посты не найдены :(</h5>}
+                {posts.posts ? <div className="mt-3 custom-scrollbar" style={{ maxHeight: '390px', overflowY: "auto" }}>
+                    {posts.posts.map(item => <Post post={item}/>)}
+                </div> : <h5 className="mt-3" style={{textAlign: 'center'}}>Посты не найдены :(</h5>}
             </>}
+            <CreatePostModal show={showModal} onHide={() => setShowModal(false)} />
         </div>
     )
 }
