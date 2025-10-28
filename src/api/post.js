@@ -16,8 +16,8 @@ export const getPosts = async (search=null, catID=null) => {
         else if (catID) query += `?catID=${catID}`;
         else if (search) query += `?search=${search}`;
 
-        const {results} = await $host.get(query)
-        return results
+        const {data} = await $host.get(query)
+        return data.results
     } catch (e) {
         console.log(e)
     }
@@ -35,6 +35,7 @@ export const getOnePost = async (id) => {
 export const createPost = async (post) => {
     try {
         const {data} = await $authHost.post('api/posts/', post)
+        console.log(data)
         return data
     } catch (e) {
         console.log(e)
