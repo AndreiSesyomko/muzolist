@@ -40,6 +40,14 @@ const Posts = () => {
         })
     }, [search, selectedCat]);
 
+    const handleSelectCat = (cat) => {
+        if(cat === selectedCat) {
+            setSelectedCat(null)
+        } else {
+            setSelectedCat(cat)
+        }
+    }
+
     return (
         <div className="main">
             <h4>Посты</h4>
@@ -57,7 +65,7 @@ const Posts = () => {
                     <h5 className="mt-3">Категории</h5>
                     <ListGroup horizontal className="mt-2">
                         {posts.cats.map((cat) => <ListGroup.Item key={cat.id} action onClick={() => {
-                            setSelectedCat(cat.id);
+                            handleSelectCat(cat.id);
                         }}>{cat.name}</ListGroup.Item>)}
                     </ListGroup>
                 </div> : null}

@@ -24,7 +24,7 @@ $authHost.interceptors.response.use((config) => {
     if (error.config && error.response.status === 401 && !error.config._isRetry) {
         originalRequest._isRetry = true;
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}api/token/refresh/`, {withCredentials: true});
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}api/token/refresh/`, {refresh: localStorage.getItem('refresh')});
             localStorage.setItem('token', response.data.access);
             return $authHost.request(originalRequest);
         } catch (e) {

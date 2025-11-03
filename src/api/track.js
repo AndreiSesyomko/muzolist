@@ -32,19 +32,20 @@ export const createTrack = async (form, author, album) => {
     }
 };
 
-export const getTracks = async (search=null, favourites_of=null) => {
+export const getTracks = async (search=null, favourites_of=null, sort_by=null) => {
     try {
-        let query = 'api/tracks/';
+        let query = 'api/tracks/?';
+        const params = new URLSearchParams();
         if(search) {
-            query += `?search=${search}`;
+            params.append('search', search);
         }
-        if(search && favourites_of) {
-            query += `&favourites_of=${favourites_of}`
+        if(favourites_of) {
+            params.append('favourites_of', favourites_of);
         }
-        else if(favourites_of) {
-            console.log(favourites_of);
-            query += `?favourites_of=${favourites_of}`;
+        if(sort_by) {
+            params.append('sort_by', sort_by);
         }
+        query = query + params.toString();
         const {data} = await $host.get(query);
         const res = data.map((track) => {
             console.log(track);
@@ -68,4 +69,9 @@ export const getRecomendations = async (user_id) => {
             return {...track, artist: track?.author?.name, album: track?.album?.name, src: track.audio, title: track.name};
         });
     return res;
+}
+
+export const addListen = async (user_id, track_id) => {
+    const data = await $authHost.post('api/tracks/' + track_id + '/add_listen/')
+    return data;
 }
