@@ -8,7 +8,7 @@ import default_cover from '../assets/muzolist_logo.png';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {HeartFill} from "react-bootstrap-icons"
-import {addToFavourites} from "../api/track";
+import {addListen, addToFavourites} from "../api/track";
 
 const AudioPlayer = () => {
     const {audioPlayer, trackList, user} = useContext(Context);
@@ -24,6 +24,9 @@ const AudioPlayer = () => {
 
     useEffect(() => {
         setIsLiked(user.favourites.find(track => track?.id == tracks[audioPlayer.currentIndex].id))
+        addListen(user.user.id, tracks[audioPlayer.currentIndex].id).then(data => {
+            console.log(data);
+        })
     }, [audioPlayer.currentIndex]);
 
     useEffect(() => {

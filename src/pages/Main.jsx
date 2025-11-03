@@ -9,10 +9,11 @@ const Main = () => {
     const {trackList} = useContext(Context)
     const [search, setSearch] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [selectedOrdering, setSelectedOrdering] = React.useState(null);
     useEffect(() => {
         if (search) {
             setLoading(true);
-            getTracks(search).then(tracks => {
+            getTracks(search, null, selectedOrdering).then(tracks => {
                 console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
@@ -21,7 +22,7 @@ const Main = () => {
             })
         } else {
             setLoading(true);
-            getTracks().then(tracks => {
+            getTracks(null, null, selectedOrdering).then(tracks => {
                 console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
@@ -29,7 +30,7 @@ const Main = () => {
                 setLoading(false);
             })
         }
-    }, [search])
+    }, [search, selectedOrdering]);
     return (
         <div className="main">
             <InputGroup className="mb-3">
@@ -40,9 +41,12 @@ const Main = () => {
                     title="Сортировать"
                     id="input-group-dropdown-2"
                     align="end"
+                    onSelect={(e) => {
+                        setSelectedOrdering(e);
+                    }}
                 >
-                    <Dropdown.Item href="#">По жанру</Dropdown.Item>
-                    <Dropdown.Item href="#">По популярности</Dropdown.Item>
+                    <Dropdown.Item eventKey="listens">По прослушиваниям</Dropdown.Item>
+                    <Dropdown.Item eventKey="favorites">По популярности</Dropdown.Item>
                 </DropdownButton>
             </InputGroup>
             {loading ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px'}}>
