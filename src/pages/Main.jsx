@@ -10,6 +10,7 @@ const Main = () => {
     const [search, setSearch] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [selectedOrdering, setSelectedOrdering] = React.useState(null);
+    const [selectedItemDropDown, setSelectedItemDropDown] = React.useState('Сортировать');
     useEffect(() => {
         if (search) {
             setLoading(true);
@@ -38,11 +39,19 @@ const Main = () => {
 
                 <DropdownButton
                     variant="primary"
-                    title="Сортировать"
+                    title={selectedItemDropDown}
                     id="input-group-dropdown-2"
                     align="end"
                     onSelect={(e) => {
-                        setSelectedOrdering(e);
+                        if(e === selectedOrdering) {
+                            setSelectedOrdering(null)
+                            setSelectedItemDropDown('Сортировать');
+                        } else {
+                            setSelectedOrdering(e);
+                            if(e == 'listens') setSelectedItemDropDown('По прослушиваниям');
+                            else setSelectedItemDropDown('По популярности')
+                        }
+
                     }}
                 >
                     <Dropdown.Item eventKey="listens">По прослушиваниям</Dropdown.Item>

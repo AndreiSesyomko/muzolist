@@ -9,10 +9,12 @@ const Favourites = () => {
     const {trackList, user} = useContext(Context)
     const [search, setSearch] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [selectedOrdering, setSelectedOrdering] = React.useState(null);
+    const [selectedItemDropDown, setSelectedItemDropDown] = React.useState('Сортировать');
     useEffect(() => {
         if (search) {
             setLoading(true);
-            getTracks(search, user.user.id).then(tracks => {
+            getTracks(search, user.user.id, selectedOrdering).then(tracks => {
                 console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
@@ -21,7 +23,7 @@ const Favourites = () => {
             })
         } else {
             setLoading(true);
-            getTracks(null, user.user.id).then(tracks => {
+            getTracks(null, user.user.id, selectedOrdering).then(tracks => {
                 console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
@@ -29,7 +31,7 @@ const Favourites = () => {
                 setLoading(false);
             })
         }
-    }, [search])
+    }, [search, selectedOrdering])
     return (
         <div className="main">
             <h4>Избранное</h4>
@@ -38,9 +40,20 @@ const Favourites = () => {
 
                 <DropdownButton
                     variant="primary"
-                    title="Сортировать"
+                    title={selectedItemDropDown}
                     id="input-group-dropdown-2"
                     align="end"
+                    onSelect={(e) => {
+                        if(e === selectedOrdering) {
+                            setSelectedOrdering(null)
+                            setSelectedItemDropDown('Сортировать');
+                        } else {
+                            setSelectedOrdering(e);
+                            if(e == 'listens') setSelectedItemDropDown('По прослушиваниям');
+                            else setSelectedItemDropDown('По популярности')
+                        }
+
+                    }}
                 >
                     <Dropdown.Item href="#">По жанру</Dropdown.Item>
                     <Dropdown.Item href="#">По популярности</Dropdown.Item>
