@@ -13,7 +13,7 @@ const CreateTrackModal = ({show, onHide}) => {
     const [audio, setAudio] = useState(null);
     const [errors, setErrors] = useState({});
     const [checked, setChecked] = useState(false);
-    const [metadata, setMetadata] = useState({});
+    const [metadata, setMetadata] = useState(null);
 
     useEffect(() => {
         getGenres().then((data) => {
@@ -53,6 +53,7 @@ const CreateTrackModal = ({show, onHide}) => {
             formData.append('name', name);
             formData.append('genre_id', selectedGenre.id);
             if(!checked && metadata) {
+                console.log(metadata);
                 formData.append(metadata[0], metadata[1], metadata[2]);
             } else {
                 if(cover) {
