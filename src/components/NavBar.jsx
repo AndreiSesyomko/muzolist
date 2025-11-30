@@ -32,6 +32,13 @@ function NavBar() {
         closeSidebar();
     }
 
+    const logout = () => {
+        user.setIsAuth(false);
+        user.setUser({})
+        localStorage.clear();
+        setShowSidebar(false);
+    }
+
     const tracks = trackList.tracks;
 
     return (
@@ -62,6 +69,7 @@ function NavBar() {
                         <Nav.Link onClick={handlePosts}>Посты</Nav.Link>
                         <Nav.Link onClick={handleReco}>Рекомендации</Nav.Link>
                         <Nav.Link href="#createTrack" onClick={() => setShowCreateModal(true)}>Добавить свой трек</Nav.Link>
+                        <Nav.Link onClick={logout}>Выйти</Nav.Link>
                     </Nav>
                 </Offcanvas.Body>
                 <CreateTrackModal show={showCreateModal} onHide={() => setShowCreateModal(false)} />

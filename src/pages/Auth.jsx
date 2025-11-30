@@ -55,10 +55,14 @@ const Auth = () => {
                 });
             } else {
                 loginAPI(email, password).then(data => {
-                    user.setUser(data)
-                    user.setIsAuth(true)
-                    console.log(data)
-                    navigate('/')
+                    if(data) {
+                        user.setUser(data)
+                        user.setIsAuth(true)
+                        console.log(data, 'here is data')
+                        navigate('/')
+                    } else {
+                        setError('Неверный email или пароль');
+                    }
                 }).catch(error => {
                     if (error.response && error.response.status === 401) {
                         setError('Неверный email или пароль');

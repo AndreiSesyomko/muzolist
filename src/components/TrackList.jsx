@@ -10,23 +10,46 @@ const TrackList = ({height="580px"}) => {
     const {trackList, audioPlayer} = useContext(Context);
 
     const togglePlayPause = async (index) => {
-        trackList.setCurrentTracks(trackList.tracks)
-        trackList.setIsEquals(true)
-        if(audioPlayer.currentIndex !== index) {
+        trackList.setCurrentTracks(trackList.tracks);
+        trackList.setIsEquals(true);
+
+        if (audioPlayer.currentIndex !== index) {
             audioPlayer.setCurrentIndex(index);
-            audioPlayer.setPlaying(true);
-            audioPlayer.setIsRotating(true);
-            await audioPlayer.audioPlayer.play();
+
+            audioPlayer.audioPlayer.src = trackList.tracks[index].src;
+            audioPlayer.audioPlayer.load();
+
+            await new Promise((resolve) => {
+                audioPlayer.audioPlayer.onloadedmetadata = resolve;
+            });
+
+            try {
+                await audioPlayer.audioPlayer.play();
+                audioPlayer.setPlaying(true);
+                audioPlayer.setIsRotating(true);
+            } catch (e) {
+                audioPlayer.setPlaying(false);
+                audioPlayer.setIsRotating(false);
+                console.error('Ошибка при воспроизведении', e);
+            }
         } else {
             const audio = audioPlayer.audioPlayer;
+
             if (audioPlayer.playing) {
                 audio.pause();
+                audioPlayer.setPlaying(false);
+                audioPlayer.setIsRotating(false);
             } else {
-                console.log(audioPlayer.audioPlayer, 'aaa')
-                await audio.play();
+                try {
+                    await audio.play();
+                    audioPlayer.setPlaying(true);
+                    audioPlayer.setIsRotating(true);
+                } catch (e) {
+                    audioPlayer.setPlaying(false);
+                    audioPlayer.setIsRotating(false);
+                    console.error('Ошибка при воспроизведении', e);
+                }
             }
-            audioPlayer.setPlaying(!audioPlayer.playing);
-            audioPlayer.setIsRotating(!audioPlayer.isRotating);
         }
     };
 

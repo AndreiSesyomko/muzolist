@@ -24,6 +24,7 @@ const AudioPlayer = () => {
 
     useEffect(() => {
         setIsLiked(user.favourites.find(track => track?.id == tracks[audioPlayer.currentIndex].id))
+        console.log(user.favourites);
         addListen(user.user.id, tracks[audioPlayer.currentIndex].id).then(data => {
             console.log(data);
         })
@@ -53,6 +54,7 @@ const AudioPlayer = () => {
             audioPlayer.setCurrentTime(audioPlayer.audioPlayer.currentTime);
             audioPlayer.setProgress((audioPlayer.audioPlayer.currentTime / audioPlayer.audioPlayer.duration) * 100);
         };
+
         const onEnded = () => {
             const nextIndex = (audioPlayer.currentIndex + 1) % tracks.length;
             audioPlayer.setCurrentIndex(nextIndex);
@@ -80,12 +82,23 @@ const AudioPlayer = () => {
     const togglePlayPause = () => {
         if (audioPlayer.playing) {
             audioPlayer.audioPlayer.pause();
+            audioPlayer.setPlaying(false);
+            audioPlayer.setIsRotating(false);
         } else {
-            console.log(audioPlayer.audioPlayer, 'aaa')
-            audioPlayer.audioPlayer.play();
+            const playPromise = audioPlayer.audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioPlayer.setPlaying(true);
+                    audioPlayer.setIsRotating(true);
+                }).catch(() => {
+                    audioPlayer.setPlaying(false);
+                    audioPlayer.setIsRotating(false);
+                });
+            } else {
+                audioPlayer.setPlaying(true);
+                audioPlayer.setIsRotating(true);
+            }
         }
-        audioPlayer.setPlaying(!audioPlayer.playing);
-        audioPlayer.setIsRotating(!audioPlayer.isRotating);
     };
 
     const handleNext = () => {
@@ -106,11 +119,11 @@ const AudioPlayer = () => {
         const rect = e.target.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const newTime = (clickX / 300) * audioPlayer.duration;
-        console.log("curTimePrev", audioPlayer.audioPlayer.currentTime)
+
         audioPlayer.audioPlayer.currentTime = newTime;
-        console.log("curTimePost", audioPlayer.audioPlayer.currentTime)
+
         audioPlayer.setCurrentTime(newTime);
-        console.log("handleProgressClick", audioPlayer.audioPlayer.currentTime)
+
         setNow(newTime);
     };
 
