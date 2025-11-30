@@ -49,8 +49,9 @@ export const getTracks = async (search=null, favourites_of=null, sort_by=null) =
         const {data} = await $host.get(query);
         const res = data.map((track) => {
             console.log(track);
-            return {...track, artist: track?.author?.name, album: track?.album?.name, src: track.audio, title: track.name};
+            return {...track, artist: track?.author?.name, album: track?.album?.name, src: `${process.env.REACT_APP_API_URL}api/track/${track.id}/stream/`, title: track.name};
         });
+        console.log('sadasda', res)
         return res;
     } catch (error) {
         console.log(error);
