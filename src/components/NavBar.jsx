@@ -51,7 +51,7 @@ function NavBar() {
                     </Button> : <Button style={{color: '#CC25F7'}} variant="outline-light" onClick={() => navigate('/auth')} aria-label="Toggle sidebar">
                         Авторизоваться
                     </Button>}
-                    {tracks && <AudioPlayer tracks={tracks} />}
+
                     <Navbar.Brand style={{color: '#CC25F7', cursor: 'pointer'}} onClick={() => navigate('/')} className="mx-3">
                         Muzolist
                     </Navbar.Brand>
