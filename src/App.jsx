@@ -20,26 +20,21 @@ const App = observer(() => {
   useEffect(() => {
       checkAuth().then((data) => {
           if(data) {
-              console.log(data);
               user.setIsAuth(true);
               user.setUser(data);
           }
       }).finally(() => {
           getTracks().then((data) => {
               if(data) {
-                  console.log(data);
                   const res = [...data]
                   trackList.setTracks(res);
                   trackList.setCurrentTracks(res)
-                  console.log(trackList.tracks, trackList.currentTracks);
               }
           }).finally(() => {
               getTracks(null, user.user.id).then((data) => {
                   if(data) {
-                      console.log(data);
                       const res = [...data]
                       user.setFavourites(res)
-                      console.log(user.favourites);
                   }
               }).finally(() => {
                   setLoading(false);

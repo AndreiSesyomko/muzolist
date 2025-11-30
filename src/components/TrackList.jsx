@@ -30,7 +30,6 @@ const TrackList = ({height="580px"}) => {
             } catch (e) {
                 audioPlayer.setPlaying(false);
                 audioPlayer.setIsRotating(false);
-                console.error('Ошибка при воспроизведении', e);
             }
         } else {
             const audio = audioPlayer.audioPlayer;
@@ -47,7 +46,6 @@ const TrackList = ({height="580px"}) => {
                 } catch (e) {
                     audioPlayer.setPlaying(false);
                     audioPlayer.setIsRotating(false);
-                    console.error('Ошибка при воспроизведении', e);
                 }
             }
         }

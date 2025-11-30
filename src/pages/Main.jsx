@@ -15,7 +15,6 @@ const Main = () => {
         if (search) {
             setLoading(true);
             getTracks(search, null, selectedOrdering).then(tracks => {
-                console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
             }).finally(() => {
@@ -24,7 +23,6 @@ const Main = () => {
         } else {
             setLoading(true);
             getTracks(null, null, selectedOrdering).then(tracks => {
-                console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
             }).finally(() => {

@@ -4,7 +4,6 @@ import {jwtDecode} from "jwt-decode";
 
 export const registrationAPI = async (email, username, password) => {
     try {
-        console.log(process.env.REACT_APP_API_URL)
         const {data} = await $host.post('api/register/', {email, username, password});
         return loginAPI(email, password);
     } catch (error) {
@@ -15,7 +14,6 @@ export const registrationAPI = async (email, username, password) => {
 export const loginAPI = async (email, password) => {
     try {
         const {data} = await $host.post('api/login/', {email, password});
-        console.log(data)
         localStorage.setItem('token', data.access);
         localStorage.setItem('refresh', data.refresh);
         return data.user;

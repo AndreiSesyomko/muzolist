@@ -15,7 +15,6 @@ const Favourites = () => {
         if (search) {
             setLoading(true);
             getTracks(search, user.user.id, selectedOrdering).then(tracks => {
-                console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
             }).finally(() => {
@@ -24,7 +23,6 @@ const Favourites = () => {
         } else {
             setLoading(true);
             getTracks(null, user.user.id, selectedOrdering).then(tracks => {
-                console.log(tracks);
                 trackList.setTracks(tracks);
                 trackList.setIsEquals(false);
             }).finally(() => {

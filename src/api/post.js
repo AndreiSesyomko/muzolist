@@ -35,7 +35,6 @@ export const getOnePost = async (id) => {
 export const createPost = async (post) => {
     try {
         const {data} = await $authHost.post('api/posts/', post)
-        console.log(data)
         return data
     } catch (e) {
         console.log(e)

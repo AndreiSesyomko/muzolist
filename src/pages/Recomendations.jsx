@@ -13,7 +13,6 @@ const Recomendations = () => {
     const handleRecomendations = () => {
         setLoading(true);
         getRecomendations(user.user.id).then(tracks => {
-            console.log(tracks);
             trackList.setTracks(tracks);
             trackList.setIsEquals(false);
             setIsSended(true)
