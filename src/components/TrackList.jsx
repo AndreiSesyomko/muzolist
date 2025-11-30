@@ -54,7 +54,7 @@ const TrackList = ({height="580px"}) => {
     };
 
     return (
-        trackList.tracks?.length > 0 ? <ListGroup className="custom-scrollbar" style={{ maxHeight: height, overflowY: "auto" }}>
+        trackList.tracks?.length > 0 ? <ListGroup className="custom-scrollbar" style={{ height: height, overflowY: "auto" }}>
             {trackList.tracks.map((track, index) => <ListGroup.Item active={audioPlayer.currentIndex === index && trackList.isEquals} onClick={() => togglePlayPause(index)} action key={index}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center justify-content-left">
