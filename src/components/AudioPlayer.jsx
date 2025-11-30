@@ -24,9 +24,7 @@ const AudioPlayer = () => {
 
     useEffect(() => {
         setIsLiked(user.favourites.find(track => track?.id == tracks[audioPlayer.currentIndex].id))
-        console.log(user.favourites);
         addListen(user.user.id, tracks[audioPlayer.currentIndex].id).then(data => {
-            console.log(data);
         })
     }, [audioPlayer.currentIndex]);
 
@@ -35,7 +33,6 @@ const AudioPlayer = () => {
             audioPlayer.setAudioPlayer(new Audio(tracks[audioPlayer.currentIndex].src));
         }
 
-        console.log(audioPlayer, tracks);
 
         const url = new URL(audioPlayer.audioPlayer.src);
 
@@ -47,7 +44,6 @@ const AudioPlayer = () => {
         audioPlayer.audioPlayer.volume = audioPlayer.volume ?? 1;
 
         const onLoadedMetadata = () => {
-            console.log('started', audioPlayer.currentIndex);
             audioPlayer.setDuration(audioPlayer.audioPlayer.duration);
         };
         const onTimeUpdate = () => {
@@ -58,7 +54,6 @@ const AudioPlayer = () => {
         const onEnded = () => {
             const nextIndex = (audioPlayer.currentIndex + 1) % tracks.length;
             audioPlayer.setCurrentIndex(nextIndex);
-            console.log('ended', audioPlayer.currentIndex);
         };
 
         audioPlayer.audioPlayer.addEventListener('loadedmetadata', onLoadedMetadata);

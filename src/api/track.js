@@ -16,16 +16,12 @@ export const createTrack = async (form, author, album) => {
         if(album) {
             const newAlbum = await $authHost.post('api/albums/', {name: album});
             form.append('album_id', newAlbum.data.id);
-            console.log('asas')
         }
         if(author) {
             const newAuthor = await $authHost.post('api/authors/', {name: author}) ?? {};
-            console.log(newAuthor.data.id);
             form.append('author_id', newAuthor?.data?.id);
-            console.log('bsbs')
         }
         const response = await $authHost.post('api/tracks/', form);
-        console.log(response);
         return response.data;
     } catch (error) {
         console.log(error);
@@ -48,10 +44,8 @@ export const getTracks = async (search=null, favourites_of=null, sort_by=null) =
         query = query + params.toString();
         const {data} = await $host.get(query);
         const res = data.map((track) => {
-            console.log(track);
             return {...track, artist: track?.author?.name, album: track?.album?.name, src: `${process.env.REACT_APP_API_URL}api/track/${track.id}/stream/`, title: track.name};
         });
-        console.log('sadasda', res)
         return res;
     } catch (error) {
         console.log(error);

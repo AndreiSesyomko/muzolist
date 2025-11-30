@@ -14,6 +14,7 @@ const CreateTrackModal = ({show, onHide}) => {
     const [errors, setErrors] = useState({});
     const [checked, setChecked] = useState(false);
     const [metadata, setMetadata] = useState(null);
+    const [isPending, setIsPending] = useState(false);
 
     useEffect(() => {
         getGenres().then((data) => {
@@ -48,7 +49,8 @@ const CreateTrackModal = ({show, onHide}) => {
     }
 
     const addTrack = async () => {
-        if(validate()) {
+        if(validate() && !isPending) {
+            setIsPending(true);
             const formData = new FormData();
             formData.append('name', name);
             formData.append('genre_id', selectedGenre.id);
@@ -62,9 +64,10 @@ const CreateTrackModal = ({show, onHide}) => {
             }
             formData.append('audio', audio);
             createTrack(formData, author, album).then((data) => {
-                console.log(data);
                 onHide();
                 setSelectedGenre({});
+            }).finally(() => {
+                setIsPending(false);
             })
         }
     }

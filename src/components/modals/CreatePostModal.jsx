@@ -9,6 +9,7 @@ const CreatePostModal = ({show, onHide}) => {
     const [description, setDescription] = React.useState("");
     const [images, setImages] = React.useState([]);
     const [selectedCat, setSelectedCat] = React.useState(null);
+    const [isPending, setIsPending] = React.useState(false);
     const {posts} = useContext(Context)
 
     const addPostMedia = (e) => {
@@ -20,15 +21,20 @@ const CreatePostModal = ({show, onHide}) => {
     }
 
     const addPost = () => {
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("content", description);
-        formData.append("cat", selectedCat.id);
-        images.forEach(image => formData.append("photos", image));
+        if(!isPending) {
+            setIsPending(true);
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("content", description);
+            formData.append("cat", selectedCat.id);
+            images.forEach(image => formData.append("photos", image));
 
-        createPost(formData).then(data => {
-            onHide();
-        })
+            createPost(formData).then(data => {
+                onHide();
+            }).finally(() => {
+                setIsPending(false);
+            })
+        }
     }
 
     return (

@@ -21,10 +21,8 @@ const Posts = () => {
             }
         }).finally(() => {
             getPosts().then(data => {
-                console.log(data);
                 if(data) {
                     posts.setPosts(data);
-                    console.log(posts.posts);
                 }
             }).then(() => {
                 setLoading(false);

@@ -13,6 +13,7 @@ const Auth = () => {
     const [username, setUsername] = useState('');
     const [errors, setErrors] = useState({});
     const [error, setError] = useState(null);
+    const [isPending, setIsPending] = useState(false);
     const navigate = useNavigate();
 
     const switchMode = () => {
@@ -34,14 +35,12 @@ const Auth = () => {
         if (!validateEmail()) newErrors.email = "Некорректный email";
 
         setErrors(newErrors);
-        console.log(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = (e) => {
-        console.log('a')
-        if(validate()) {
-            console.log('b')
+        if(validate() && !isPending) {
+            setIsPending(true);
             setError(null);
             if(isRegister) {
                 registrationAPI(email, username, password).then(data => {
@@ -52,13 +51,14 @@ const Auth = () => {
                     if (error.response && error.response.status === 401) {
                         setError('Неверный email или пароль');
                     }
+                }).finally(() => {
+                    setIsPending(false);
                 });
             } else {
                 loginAPI(email, password).then(data => {
                     if(data) {
                         user.setUser(data)
                         user.setIsAuth(true)
-                        console.log(data, 'here is data')
                         navigate('/')
                     } else {
                         setError('Неверный email или пароль');
@@ -67,6 +67,8 @@ const Auth = () => {
                     if (error.response && error.response.status === 401) {
                         setError('Неверный email или пароль');
                     }
+                }).finally(() => {
+                    setIsPending(false);
                 });
             }
         }
