@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "ajv": "^8.17.1",
-    "ajv-keywords": "^5.1.0"
+    "ajv-keywords": "^5.1.0",
+    "baseline-browser-mapping": "^2.8.32"
   }
 }
