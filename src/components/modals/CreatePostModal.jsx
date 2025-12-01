@@ -21,7 +21,7 @@ const CreatePostModal = ({show, onHide}) => {
     }
 
     const addPost = () => {
-        if(!isPending) {
+        if(!isPending && selectedCat) {
             setIsPending(true);
             const formData = new FormData();
             formData.append("title", title);
