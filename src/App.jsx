@@ -54,7 +54,6 @@ const App = observer(() => {
       <BrowserRouter>
         <NavBar/>
         <AppRouter />
-        <div style={{height: '60px'}}></div>
         <Footer/>
       </BrowserRouter>
   );

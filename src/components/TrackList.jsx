@@ -34,18 +34,20 @@ const TrackList = ({height="580px"}) => {
         } else {
             const audio = audioPlayer.audioPlayer;
 
-            if (audioPlayer.playing) {
-                audio.pause();
-                audioPlayer.setPlaying(false);
-                audioPlayer.setIsRotating(false);
-            } else {
-                try {
-                    await audio.play();
-                    audioPlayer.setPlaying(true);
-                    audioPlayer.setIsRotating(true);
-                } catch (e) {
+            if (audio.readyState === 4) {
+                if (audioPlayer.playing) {
+                    audio.pause();
                     audioPlayer.setPlaying(false);
                     audioPlayer.setIsRotating(false);
+                } else {
+                    try {
+                        await audio.play();
+                        audioPlayer.setPlaying(true);
+                        audioPlayer.setIsRotating(true);
+                    } catch (e) {
+                        audioPlayer.setPlaying(false);
+                        audioPlayer.setIsRotating(false);
+                    }
                 }
             }
         }

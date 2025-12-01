@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Navbar, Container, Button, Offcanvas, Nav } from 'react-bootstrap';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
@@ -22,6 +22,10 @@ function NavBar() {
         closeSidebar();
     }
 
+    useEffect(() => {
+        console.log(trackList.currentTracks);
+    }, [showSidebar]);
+
     const handlePosts = () => {
         navigate('/posts');
         closeSidebar();
@@ -32,6 +36,11 @@ function NavBar() {
         closeSidebar();
     }
 
+    const handleMain = () => {
+        navigate('/');
+        closeSidebar();
+    }
+
     const logout = () => {
         user.setIsAuth(false);
         user.setUser({})
@@ -39,7 +48,7 @@ function NavBar() {
         setShowSidebar(false);
     }
 
-    const tracks = trackList.tracks;
+    const tracks = trackList.currentTracks;
 
     return (
         <>
@@ -64,6 +73,7 @@ function NavBar() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
+                        <Nav.Link onClick={handleMain}>Главная</Nav.Link>
                         <Nav.Link onClick={() => setShowUserModal(true)}>Профиль</Nav.Link>
                         <Nav.Link onClick={handleFavourites}>Мои треки</Nav.Link>
                         <Nav.Link onClick={handlePosts}>Посты</Nav.Link>

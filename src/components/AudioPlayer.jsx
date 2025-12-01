@@ -15,6 +15,7 @@ const AudioPlayer = () => {
     const [isLiked, setIsLiked] = useState(false)
     const tracks = trackList.currentTracks;
     const [now, setNow] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         if(audioPlayer.audioPlayer){
@@ -45,6 +46,16 @@ const AudioPlayer = () => {
 
         const onLoadedMetadata = () => {
             audioPlayer.setDuration(audioPlayer.audioPlayer.duration);
+            if (audioPlayer.playing) {
+                const playPromise = audioPlayer.audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        audioPlayer.setPlaying(false);
+                        audioPlayer.setIsRotating(false);
+                    });
+                }
+            }
+            setIsLoaded(true);
         };
         const onTimeUpdate = () => {
             audioPlayer.setCurrentTime(audioPlayer.audioPlayer.currentTime);
@@ -53,6 +64,7 @@ const AudioPlayer = () => {
 
         const onEnded = () => {
             const nextIndex = (audioPlayer.currentIndex + 1) % tracks.length;
+            setIsLoaded(false);
             audioPlayer.setCurrentIndex(nextIndex);
         };
 
@@ -75,33 +87,37 @@ const AudioPlayer = () => {
     }, [audioPlayer.currentIndex, trackList.currentTracks, audioPlayer]);
 
     const togglePlayPause = () => {
-        if (audioPlayer.playing) {
-            audioPlayer.audioPlayer.pause();
-            audioPlayer.setPlaying(false);
-            audioPlayer.setIsRotating(false);
-        } else {
-            const playPromise = audioPlayer.audioPlayer.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
+        if(isLoaded) {
+            if (audioPlayer.playing) {
+                audioPlayer.audioPlayer.pause();
+                audioPlayer.setPlaying(false);
+                audioPlayer.setIsRotating(false);
+            } else {
+                const playPromise = audioPlayer.audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        audioPlayer.setPlaying(true);
+                        audioPlayer.setIsRotating(true);
+                    }).catch(() => {
+                        audioPlayer.setPlaying(false);
+                        audioPlayer.setIsRotating(false);
+                    });
+                } else {
                     audioPlayer.setPlaying(true);
                     audioPlayer.setIsRotating(true);
-                }).catch(() => {
-                    audioPlayer.setPlaying(false);
-                    audioPlayer.setIsRotating(false);
-                });
-            } else {
-                audioPlayer.setPlaying(true);
-                audioPlayer.setIsRotating(true);
+                }
             }
         }
     };
 
     const handleNext = () => {
         audioPlayer.setCurrentIndex((audioPlayer.currentIndex + 1) % tracks.length);
+        setIsLoaded(false);
     };
 
     const handlePrev = () => {
         audioPlayer.setCurrentIndex((audioPlayer.currentIndex === 0 ? tracks.length - 1 : audioPlayer.currentIndex - 1));
+        setIsLoaded(false);
     };
 
     const handleVolumeChange = (e) => {

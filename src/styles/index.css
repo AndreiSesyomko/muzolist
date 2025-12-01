@@ -20,7 +20,7 @@ body {
 .footer {
   background: white;
   color: #CC25F7;
-  height: 56px;
+  height: 6vh;
   width: 100%;
   text-align: center;
   display: flex;
@@ -85,9 +85,10 @@ body {
   margin-bottom: 19px;
   background: #fff;
   border-radius: 25px;
-  height: 700px;
+  height: 73vh;
   width: 70%;
   padding: 35px;
+  overflow: hidden;
 }
 
 .custom-scrollbar {
