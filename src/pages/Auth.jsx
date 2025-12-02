@@ -44,9 +44,13 @@ const Auth = () => {
             setError(null);
             if(isRegister) {
                 registrationAPI(email, username, password).then(data => {
-                    user.setUser(data)
-                    user.setIsAuth(true)
-                    navigate('/')
+                    if(data) {
+                        user.setUser(data)
+                        user.setIsAuth(true)
+                        navigate('/')
+                    } else {
+                        setError('Неверный email или пароль');
+                    }
                 }).catch(error => {
                     if (error.response && error.response.status === 401) {
                         setError('Неверный email или пароль');
