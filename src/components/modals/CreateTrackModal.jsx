@@ -123,7 +123,7 @@ const CreateTrackModal = ({show, onHide}) => {
                 <Button variant="secondary" onClick={onHide}>
                     Отмена
                 </Button>
-                <Button variant="primary" onClick={addTrack}>
+                <Button variant="primary" onClick={addTrack} disabled={isPending}>
                     Отправить
                 </Button>
             </Modal.Footer>
