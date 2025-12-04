@@ -71,10 +71,10 @@ const CreatePostModal = ({show, onHide}) => {
                 </Row>)}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-success" onClick={addPost}>
+                <Button variant="outline-success" onClick={addPost} disabled={isPending}>
                     Сохранить
                 </Button>
-                <Button variant="outline-danger" onClick={onHide} disabled={isPending}>
+                <Button variant="outline-danger" onClick={onHide}>
                     Закрыть
                 </Button>
             </Modal.Footer>
