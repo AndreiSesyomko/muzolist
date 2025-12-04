@@ -24,7 +24,11 @@ const AudioPlayer = () => {
     }, [now]);
 
     useEffect(() => {
-        setIsLiked(user.favourites.find(track => track?.id == tracks[audioPlayer.currentIndex].id))
+        if(user.favourites.length > 0){
+            setIsLiked(user.favourites.find(track => track.id === tracks[audioPlayer.currentIndex].id))
+        } else {
+            setIsLiked(false)
+        }
         addListen(user.user.id, tracks[audioPlayer.currentIndex].id).then(data => {
         })
     }, [audioPlayer.currentIndex]);
@@ -111,13 +115,17 @@ const AudioPlayer = () => {
     };
 
     const handleNext = () => {
-        audioPlayer.setCurrentIndex((audioPlayer.currentIndex + 1) % tracks.length);
-        setIsLoaded(false);
+        if(isLoaded) {
+            audioPlayer.setCurrentIndex((audioPlayer.currentIndex + 1) % tracks.length);
+            setIsLoaded(false);
+        }
     };
 
     const handlePrev = () => {
-        audioPlayer.setCurrentIndex((audioPlayer.currentIndex === 0 ? tracks.length - 1 : audioPlayer.currentIndex - 1));
-        setIsLoaded(false);
+        if(isLoaded) {
+            audioPlayer.setCurrentIndex((audioPlayer.currentIndex === 0 ? tracks.length - 1 : audioPlayer.currentIndex - 1));
+            setIsLoaded(false);
+        }
     };
 
     const handleVolumeChange = (e) => {

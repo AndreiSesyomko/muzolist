@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
+import {Alert, Button, Card, Col, Container, Form, Row, Spinner} from "react-bootstrap";
 import {loginAPI, registrationAPI} from "../api/user";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
@@ -117,23 +117,26 @@ const Auth = () => {
                         </Form.Group>
                     )}
 
-                    <Button
-                        variant="primary"
-                        onClick={handleSubmit}
-                        className="w-100 mt-3"
-                        style={{
-                            background: 'linear-gradient(135deg, #a676cd, #c374be)',
-                            border: 'none',
-                            borderRadius: '20px',
-                            color: 'white'
-                        }}
-                    >
-                        {isRegister ? 'Зарегистрироваться' : 'Войти'}
-                    </Button>
+                    {isPending ?
+                        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}>
+                            <Spinner animation="border" variant="primary"/>
+                        </div> : <Button
+                            variant="primary"
+                            onClick={handleSubmit}
+                            className="w-100 mt-3"
+                            style={{
+                                background: 'linear-gradient(135deg, #a676cd, #c374be)',
+                                border: 'none',
+                                borderRadius: '20px',
+                                color: 'white'
+                            }}
+                        >
+                            {isRegister ? 'Зарегистрироваться' : 'Войти'}
+                        </Button>}
                 </Form>
 
                 <Row className="mt-3">
-                    <Col className="text-center" style={{ fontSize: '14px', color: '#a676cd', cursor: 'pointer' }} onClick={switchMode}>
+                    <Col className="text-center" style={{fontSize: '14px', color: '#a676cd', cursor: 'pointer'}} onClick={switchMode}>
                         {isRegister ? 'Уже есть аккаунт? ' : 'Нет аккаунта? '} <span onClick={switchMode} style={{textDecoration: 'underline'}}>{isRegister ? 'Войти! ' : 'Зарегистрироваться! '}</span>
                     </Col>
                 </Row>

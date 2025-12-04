@@ -14,22 +14,25 @@ const TrackList = ({height="580px"}) => {
         trackList.setIsEquals(true);
 
         if (audioPlayer.currentIndex !== index) {
-            audioPlayer.setCurrentIndex(index);
+            const audio = audioPlayer.audioPlayer;
+            if(audio.readyState === 4) {
+                audioPlayer.setCurrentIndex(index);
 
-            audioPlayer.audioPlayer.src = trackList.tracks[index].src;
-            audioPlayer.audioPlayer.load();
+                audioPlayer.audioPlayer.src = trackList.tracks[index].src;
+                audioPlayer.audioPlayer.load();
 
-            await new Promise((resolve) => {
-                audioPlayer.audioPlayer.onloadedmetadata = resolve;
-            });
+                await new Promise((resolve) => {
+                    audioPlayer.audioPlayer.onloadedmetadata = resolve;
+                });
 
-            try {
-                await audioPlayer.audioPlayer.play();
-                audioPlayer.setPlaying(true);
-                audioPlayer.setIsRotating(true);
-            } catch (e) {
-                audioPlayer.setPlaying(false);
-                audioPlayer.setIsRotating(false);
+                try {
+                    await audioPlayer.audioPlayer.play();
+                    audioPlayer.setPlaying(true);
+                    audioPlayer.setIsRotating(true);
+                } catch (e) {
+                    audioPlayer.setPlaying(false);
+                    audioPlayer.setIsRotating(false);
+                }
             }
         } else {
             const audio = audioPlayer.audioPlayer;
